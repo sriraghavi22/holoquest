@@ -3,11 +3,15 @@ import { Room } from './room';
 import { ScholarsLibrary } from './scholarsLibrary';
 import { CelestialForge } from './celestialForge';
 import { EtherealClocktower } from './etherealClocktower';
+import {VerdantLabyrinth} from './verdantLabyrinth';
+import { LunarCommandNexus } from './puzle3';
 const levels = {
   'room': Room,
   'scholarsLibrary': ScholarsLibrary,
   'celestialForge': CelestialForge,
-  'etherealClocktower': EtherealClocktower
+  'etherealClocktower': EtherealClocktower,
+  'verdantLabyrinth': VerdantLabyrinth,
+  'puzle3': LunarCommandNexus
 };
 
 export class LevelManager {

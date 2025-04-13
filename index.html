@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HoloQuest - 3D Escape Room</title>
   <link rel="stylesheet" href="/styles.css">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
 </head>
 <body>
   <!-- Welcome Screen -->
@@ -42,16 +42,37 @@
           <img src="https://img.icons8.com/ios-filled/50/FF0000/lock.png" alt="Locked" class="level-icon">
           <span>Level 4</span>
         </button>
-        <button class="level-button locked" data-level="level5" id="level-4-button" disabled>
+        <button class="level-button locked" data-level="verdantLabyrinth" id="level-5-button" disabled>
           <img src="https://img.icons8.com/ios-filled/50/FF0000/lock.png" alt="Locked" class="level-icon">
           <span>Level 5</span>
         </button>
+        <button class="level-button locked" data-level="puzle3" id="level-6-button" disabled>
+          <img src="https://img.icons8.com/ios-filled/50/FF0000/lock.png" alt="Locked" class="level-icon">
+          <span>Level 6</span>
+        </button>
       </div>
+      <!-- Instructions Button -->
+      <button id="instructions-button" class="spooky-button instructions-btn">INSTRUCTIONS ?</button>
     </div>
     <img src="/assets/ghost-1.png" alt="Ghost" class="ghost ghost-1">
     <img src="/assets/ghost-2.png" alt="Ghost" class="ghost ghost-2">
     <div class="fog"></div>
     <div class="blood-drip"></div>
+  </div>
+
+  <!-- Instructions Pop-Up -->
+  <div id="instructions-pop-up" class="hidden">
+    <div class="pop-up-content">
+      <h3 class="pop-up-title">INSTRUCTIONS</h3>
+      <p class="pop-up-text">
+        Welcome to HoloQuest!<br>
+        - Use gestures or voice commands to interact.<br>
+        - Solve puzzles to unlock new levels.<br>
+        - Difficulty adapts to your performance.<br>
+        Good luck, and beware of the ghosts!
+      </p>
+      <button id="close-instructions" class="spooky-button close-btn">X</button>
+    </div>
   </div>
 
   <!-- Game Container -->
@@ -62,7 +83,6 @@
     </div>
     <div id="ui-layer">
       <div id="crosshair"></div>
-      <!-- <div id="inventory-bar"></div> -->
       <div id="hint-container"></div>
       <div id="timer">00:00</div>
       <div id="controls">
@@ -84,11 +104,9 @@
     Your browser does not support the audio element.
   </audio>
 
-  <!-- Load bundle.js statically -->
-  <script src="/dist/bundle.js"></script>
-
-  <!-- JavaScript to handle UI interactions -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/handtrackjs/0.1.0/handtrack.min.js"></script>
   <script>
+    // Existing audio and level selection logic (unchanged)
     const spookyAudio = document.getElementById('spooky-audio');
     const screamAudio = document.getElementById('scream-audio');
 
@@ -106,6 +124,9 @@
     const levelSelectScreen = document.getElementById('level-select-screen');
     const enterButton = document.getElementById('enter-button');
     const gameContainer = document.getElementById('game-container');
+    const instructionsButton = document.getElementById('instructions-button');
+    const instructionsPopUp = document.getElementById('instructions-pop-up');
+    const closeInstructions = document.getElementById('close-instructions');
 
     let unlockedLevels = JSON.parse(localStorage.getItem('unlockedLevels')) || ['room'];
 
@@ -159,20 +180,22 @@
           window.holoQuest.startLevel(levelId);
         } else {
           console.error('HoloQuest not initialized. Ensure bundle.js is loaded correctly.');
-          const errorMessage = document.createElement('div');
-          errorMessage.style.position = 'absolute';
-          errorMessage.style.top = '50%';
-          errorMessage.style.left = '50%';
-          errorMessage.style.transform = 'translate(-50%, -50%)';
-          errorMessage.style.color = 'red';
-          errorMessage.style.fontSize = '24px';
-          errorMessage.textContent = 'Failed to load the game. Please refresh the page or check the console for errors.';
-          document.body.appendChild(errorMessage);
         }
 
         spookyAudio.pause();
         screamAudio.pause();
       });
+    });
+
+    // Instructions Button Logic
+    instructionsButton.addEventListener('click', () => {
+      instructionsPopUp.classList.remove('hidden');
+      document.body.style.backgroundColor = 'rgba(0, 0, 0, 0.8)'; // Dim background
+    });
+
+    closeInstructions.addEventListener('click', () => {
+      instructionsPopUp.classList.add('hidden');
+      document.body.style.backgroundColor = ''; // Restore background
     });
 
     window.addEventListener('levelCompleted', (event) => {
@@ -184,6 +207,27 @@
         updateLevelButtons();
       }
     });
+
+    // Basic 3D Setup with Three.js
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('game-canvas') });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('game-container').appendChild(renderer.domElement);
+
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    const cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
+    camera.position.z = 5;
+
+    function animate() {
+      requestAnimationFrame(animate);
+      cube.rotation.x += 0.01;
+      cube.rotation.y += 0.01;
+      renderer.render(scene, camera);
+    }
+    animate();
   </script>
 </body>
 </html>
