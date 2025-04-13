@@ -200,7 +200,7 @@ render() {
     this.isRunning = false;
     this.clock.stop();
     this.eventBus.emit('game:pause');
-    this.uiManager.showPauseMenu();
+    // this.uiManager.showPauseMenu();
     document.exitPointerLock();
     console.log('[SceneManager] Game paused for', this.currentLevelId, 'at', new Date().toISOString());
   }
@@ -211,8 +211,8 @@ render() {
     this.isRunning = true;
     this.clock.start();
     this.eventBus.emit('game:resume');
-    this.uiManager.hidePauseMenu();
-    this.renderer.domElement.requestPointerLock();
+    // this.uiManager.hidePauseMenu();
+    // this.renderer.domElement.requestPointerLock();
     this.startRenderLoop();
     console.log('[SceneManager] Game resumed for', this.currentLevelId, 'at', new Date().toISOString());
   }
@@ -230,42 +230,93 @@ render() {
     winScreen.style.top = '50%';
     winScreen.style.left = '50%';
     winScreen.style.transform = 'translate(-50%, -50%)';
-    winScreen.style.background = 'rgba(0, 100, 0, 0.9)';
-    winScreen.style.color = 'white';
-    winScreen.style.padding = '20px';
-    winScreen.style.borderRadius = '10px';
-    winScreen.style.fontSize = '24px';
+    winScreen.style.background = 'linear-gradient(135deg, #2a1a5e 0%, #1a3c34 100%)'; // Gradient background for a mystical vibe
+    winScreen.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.5)'; // Glowing effect
+    winScreen.style.color = '#f5f5f5'; // Softer white for text
+    winScreen.style.padding = '40px';
+    winScreen.style.borderRadius = '15px';
+    winScreen.style.fontFamily = "'Cinzel', serif"; // A more arcane, medieval font (you can load this via Google Fonts)
     winScreen.style.textAlign = 'center';
     winScreen.style.zIndex = '3000';
+    winScreen.style.width = '500px'; // Fixed width for better layout
+    winScreen.style.border = '2px solid #FFD700'; // Gold border for a regal touch
+    winScreen.style.animation = 'fadeIn 0.5s ease-in-out'; // Fade-in animation
+
+    // Add a subtle background overlay for depth
+    winScreen.style.backgroundImage = 'url("https://www.transparenttextures.com/patterns/parchment.png")'; // Parchment texture for a library/arcane theme
+    winScreen.style.backgroundBlendMode = 'overlay';
+
+    // Inner HTML with improved structure
     winScreen.innerHTML = this.currentLevelId === 'scholarsLibrary' ? `
-      <h1>You Mastered the Library!</h1>
-      <p>Congratulations on unlocking the arcane secrets!</p>
-      <button id="next-level-button">Next Level</button>
-      <button id="return-to-menu-button">Return to Menu</button>
+      <div style="position: relative;">
+        <h1 style="font-size: 36px; color: #FFD700; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); margin-bottom: 10px;">
+          You Mastered the Library!
+        </h1>
+        <p style="font-size: 18px; color: #d4d4d4; margin-bottom: 30px;">
+          Congratulations on unlocking the arcane secrets!
+        </p>
+        <div style="display: flex; justify-content: center; gap: 20px;">
+          <button id="next-level-button">Next Level</button>
+          <button id="return-to-menu-button">Return to Menu</button>
+        </div>
+      </div>
     ` : `
-      <h1>You Escaped!</h1>
-      <p>Congratulations on solving the room!</p>
-      <button id="next-level-button">Next Level</button>
-      <button id="return-to-menu-button">Return to Menu</button>
+      <div style="position: relative;">
+        <h1 style="font-size: 36px; color: #FFD700; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); margin-bottom: 10px;">
+          You Escaped!
+        </h1>
+        <p style="font-size: 18px; color: #d4d4d4; margin-bottom: 30px;">
+          Congratulations on solving the room!
+        </p>
+        <div style="display: flex; justify-content: center; gap: 20px;">
+          <button id="next-level-button">Next Level</button>
+          <button id="return-to-menu-button">Return to Menu</button>
+        </div>
+      </div>
     `;
     document.body.appendChild(winScreen);
 
+    // Style the "Next Level" button
     const nextLevelButton = document.getElementById('next-level-button');
-    nextLevelButton.style.padding = '10px 20px';
-    nextLevelButton.style.background = '#FFD700';
-    nextLevelButton.style.color = 'black';
-    nextLevelButton.style.border = 'none';
-    nextLevelButton.style.borderRadius = '5px';
+    nextLevelButton.style.padding = '12px 30px';
+    nextLevelButton.style.background = 'linear-gradient(45deg, #FFD700, #FFA500)'; // Gold to orange gradient
+    nextLevelButton.style.color = '#1a1a1a';
+    nextLevelButton.style.border = '2px solid #FFD700';
+    nextLevelButton.style.borderRadius = '8px';
     nextLevelButton.style.cursor = 'pointer';
-    nextLevelButton.style.marginRight = '10px';
+    nextLevelButton.style.fontSize = '16px';
+    nextLevelButton.style.fontWeight = 'bold';
+    nextLevelButton.style.transition = 'transform 0.2s, box-shadow 0.3s';
+    nextLevelButton.style.boxShadow = '0 4px 10px rgba(255, 215, 0, 0.3)';
+    nextLevelButton.onmouseover = () => {
+      nextLevelButton.style.transform = 'scale(1.05)';
+      nextLevelButton.style.boxShadow = '0 6px 15px rgba(255, 215, 0, 0.5)';
+    };
+    nextLevelButton.onmouseout = () => {
+      nextLevelButton.style.transform = 'scale(1)';
+      nextLevelButton.style.boxShadow = '0 4px 10px rgba(255, 215, 0, 0.3)';
+    };
 
+    // Style the "Return to Menu" button
     const returnToMenuButton = document.getElementById('return-to-menu-button');
-    returnToMenuButton.style.padding = '10px 20px';
-    returnToMenuButton.style.background = '#FF4500';
-    returnToMenuButton.style.color = 'white';
-    returnToMenuButton.style.border = 'none';
-    returnToMenuButton.style.borderRadius = '5px';
+    returnToMenuButton.style.padding = '12px 30px';
+    returnToMenuButton.style.background = 'linear-gradient(45deg, #FF4500, #FF6347)'; // Orange-red gradient
+    returnToMenuButton.style.color = '#f5f5f5';
+    returnToMenuButton.style.border = '2px solid #FF4500';
+    returnToMenuButton.style.borderRadius = '8px';
     returnToMenuButton.style.cursor = 'pointer';
+    returnToMenuButton.style.fontSize = '16px';
+    returnToMenuButton.style.fontWeight = 'bold';
+    returnToMenuButton.style.transition = 'transform 0.2s, box-shadow 0.3s';
+    returnToMenuButton.style.boxShadow = '0 4px 10px rgba(255, 69, 0, 0.3)';
+    returnToMenuButton.onmouseover = () => {
+      returnToMenuButton.style.transform = 'scale(1.05)';
+      returnToMenuButton.style.boxShadow = '0 6px 15px rgba(255, 69, 0, 0.5)';
+    };
+    returnToMenuButton.onmouseout = () => {
+      returnToMenuButton.style.transform = 'scale(1)';
+      returnToMenuButton.style.boxShadow = '0 4px 10px rgba(255, 69, 0, 0.3)';
+    };
 
     const nextLevelId = LevelManager.getNextLevelId(this.currentLevelId);
 
@@ -304,7 +355,17 @@ render() {
       }
       this.eventBus.emit('game:restart');
     });
-  }
+
+    // Add a keyframe animation for the fade-in effect
+    const styleSheet = document.createElement('style');
+    styleSheet.innerText = `
+      @keyframes fadeIn {
+        0% { opacity: 0; transform: translate(-50%, -60%); }
+        100% { opacity: 1; transform: translate(-50%, -50%); }
+      }
+    `;
+    document.head.appendChild(styleSheet);
+}
 
   async loadLevel(levelId) {
     console.log(`Starting loadLevel for ${levelId} at`, new Date().toISOString());
