@@ -62,3 +62,9 @@ The vision for HoloQuest is to create an engaging, accessible escape room that l
    ```bash
    git clone https://github.com/your-username/HoloQuest.git
    cd HoloQuest
+## 👥 Contributors
+
+This project was developed as a **collaborative group effort** by:
+
+- [K Sri Raghavi](https://github.com/sriraghavi22)
+- [D V S Monish Kumar](https://github.com/monishkumardvs)
